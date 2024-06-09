@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Website</title>
+    </head>
+    <body>
+        Welcome to my website, {{ name }}!
+        <br>
+        <h1>
+        {% if is_new_years %}
+            Happy New Year!
+        {% else %}
+            It is not New Years :\
+        {% endif %}
+        </h1>
+    </body>
+</html>
