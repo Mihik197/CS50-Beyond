@@ -1,20 +1,33 @@
 {% extends "layout.html" %}
 {% block body %}
-    <table>
-        {% for i in range(3) %}
-            <tr>
-                {% for j in range(3) %}
-                    <td>
-                        {% if game[i][j] %}
-                            {{ game[i][j] }}
-                        {% else %}
-                            <a href="{{ url_for('play', row=i, col=j) }}">Play {{ turn }} here</a>
-                        {% endif %}
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
+    <div>
+        <table>
+            {% for i in range(3) %}
+                <tr>
+                    {% for j in range(3) %}
+                        <td>
+                            {% if game[i][j] %}
+                                {{ game[i][j] }}
+                            {% else %}
+                                <a href="{{ url_for('play', row=i, col=j) }}">Play {{ turn }} here</a>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
     <br>
-    <a href="{{ url_for('reset') }}">Reset Game</a>
+    <div>
+        {% if winner %}
+            <p>{{ winner }} has won the game!!!</p>
+        {% endif %}
+    </div>
+    <br>
+    <div>
+        <a href="{{ url_for('reset') }}">Reset Game</a>
+        <br>
+        <a href="{{ url_for('undo') }}">Undo Move</a>
+    </div>
+    
 {% endblock %}
