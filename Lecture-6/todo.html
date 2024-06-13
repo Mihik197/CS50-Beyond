@@ -28,7 +28,7 @@
                             <ul>
                                 {this.state.tasks.map((task, i) => 
                                         <li value={i}>
-                                            {task} <button onClick={() => this.taskDone(i)}>✔</button>
+                                            {task} <button value={i} onClick={this.taskDone}>✔</button>
                                         </li>
                                 )}
                             </ul>
@@ -61,7 +61,8 @@
                     }
                 }
 
-                taskDone = (index) => {
+                taskDone = (event) => {
+                    const index = event.target.value;
                     this.setState((state) => {
                         const tasks = [...state.tasks];
                         tasks.splice(index, 1);
