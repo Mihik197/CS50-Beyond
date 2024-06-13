@@ -63,7 +63,7 @@
 
                 taskDone = (index) => {
                     this.setState((state) => {
-                        const tasks = [...this.state.tasks];
+                        const tasks = [...state.tasks];
                         tasks.splice(index, 1);
                         return {
                             tasks: tasks
