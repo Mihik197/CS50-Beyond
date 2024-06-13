@@ -28,14 +28,16 @@
                             <ul>
                                 {this.state.tasks.map((task, i) => 
                                         <li value={i}>
-                                            {task} <button value={i} onClick={this.taskDone}>✔</button>
+                                            {task} <button onClick={() => this.taskDone(i)}>✔</button>
                                         </li>
                                 )}
                             </ul>
                             <div>
-                            <input value={this.state.input} onChange={this.handleChange} onKeyPress={this.inputKeyPress} autofocus="on"/>
-                            <button onClick={this.addTask}>Add Task</button>
+                                <input value={this.state.input} onChange={this.handleChange} onKeyPress={this.inputKeyPress} autofocus="on"/>
+                                <button onClick={this.addTask}>Add Task</button>
                             </div>
+                            <br/>
+                            Number of Tasks: {this.state.tasks.length}
                         </div>
                     );
                 }
@@ -59,11 +61,14 @@
                     }
                 }
 
-                taskDone = (event) => {
-                    
-                    this.setState((state) => ({
-                        tasks: state.tasks.filter((task, i) => i !== parseInt(event.target.value))
-                    }));
+                taskDone = (index) => {
+                    this.setState((state) => {
+                        const tasks = [...this.state.tasks];
+                        tasks.splice(index, 1);
+                        return {
+                            tasks: tasks
+                        };
+                    });
                 }
             }
 
