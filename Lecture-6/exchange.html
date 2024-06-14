@@ -22,6 +22,7 @@
                         converted: ""
                     };
                     this.cached = {};
+                    this.API_KEY = "66a4de3402ee0c23cd7dc708";
                 }
 
                 render() {
@@ -76,7 +77,7 @@
                         return;
                     }
 
-                    fetch(`https://v6.exchangerate-api.com/v6/66a4de3402ee0c23cd7dc708/latest/${this.state.base}`)
+                    fetch(`https://v6.exchangerate-api.com/v6/${this.API_KEY}/latest/${this.state.base}`)
                         .then(response => response.json())
                         .then(data => {
                             this.cached[this.state.base] = {
