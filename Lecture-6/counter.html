@@ -5,6 +5,12 @@
         <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         <title>Counter</title>
+        <style>
+            button, h1 {
+                padding: 10px;
+                width: 60px;
+            }
+        </style>
     </head>
     <body>
         <div id="app"></div>
@@ -28,12 +34,25 @@
                     };
                 }
 
+                componentDidMount() {
+                    const count = localStorage.getItem("count");
+                    if (count != null) {
+                        this.setState({
+                            count: parseInt(count)
+                        });
+                    }
+
+                    window.addEventListener("beforeunload", () => {
+                        localStorage.setItem("count", this.state.count);
+                    });
+                }
+
                 render() {
                     return (
                         <div>
                             <h1>{this.state.count}</h1>
-                            <button onClick={this.increment}>Increment</button>
-                            <button onClick={this.decrement}>Decrement</button>
+                            <button onClick={this.decrement}>-</button>
+                            <button onClick={this.increment}>+</button>
                         </div>
                     )
                 }

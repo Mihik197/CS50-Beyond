@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <title>Exchange</title>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="text/babel">
+
+            class App extends React.Component {
+
+                constructor(props) {
+                    super(props);
+                    this.currencies = ["AUD", "CAD", "CHF", "CNY", "INR", "USD", "EUR", "GBP", "JPY", "NZD"];
+                    this.state = {
+                        base: "INR",
+                        other: "USD",
+                        value: 1,
+                        converted: ""
+                    };
+                    this.cached = {};
+                }
+
+                render() {
+                    const currencies = this.currencies.map((currency) => 
+                        <option key={currency} value={currency}>{currency}</option>
+                    );
+
+                    return (
+                        <div>
+                            <div>
+                                <select onChange={this.makeSelection} name="base" value={this.state.base}>
+                                    {currencies}
+                                </select>
+                                <input name="value" value={this.state.value} onChange={this.updateInput}/>
+                            </div>
+
+                            <br/>
+
+                            <div>
+                                <select onChange={this.makeSelection} name="other" value={this.state.other}>
+                                    {currencies}
+                                </select>
+                                <input disabled={true} name="converted" value={this.state.converted === null ? "Calculating..." : this.state.converted}/>
+                            </div>
+                        </div>
+                    );
+                }
+
+                makeSelection = (event) => {
+                    this.setState({
+                        [event.target.name]: event.target.value
+                    }, this.recalculate)
+                }
+
+                updateInput = (event) => {
+                    this.setState({
+                        value: event.target.value,
+                        converted: null
+                    }, this.recalculate);
+                }
+
+                recalculate = () => {
+                    const value = parseFloat(this.state.value);
+                    if (isNaN(value)) {
+                        return;
+                    }
+
+                    if (this.cached[this.state.base] !== undefined && Date.now - this.cached[this.state.base].timestamp < 1000 * 60) {
+                        this.setState({
+                                converted: this.cached[this.state.base].rates[this.state.other] * value
+                            });
+                        return;
+                    }
+
+                    fetch(`https://v6.exchangerate-api.com/v6/66a4de3402ee0c23cd7dc708/latest/${this.state.base}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.cached[this.state.base] = {
+                                rates: data["conversion_rates"],
+                                timestamp: Date.now()
+                            } 
+
+                            this.setState({
+                                converted: data["conversion_rates"][this.state.other] * value
+                            });
+                        });
+                }
+
+            }
+
+            
+
+            ReactDOM.render(<App/>, document.querySelector("#app"));
+        </script>
+    </body>
+</html>
