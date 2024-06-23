@@ -15,9 +15,12 @@
             class App extends React.Component {
                 constructor(props) {
                     super(props);
+                        
                     this.state = {
                         tasks: [],
-                        input: ""
+                        input: "",
+                        editingIndex: null,
+                        editingInput: ""
                     }
                 }
 
@@ -27,8 +30,17 @@
                             <h1>Tasks</h1>
                             <ul>
                                 {this.state.tasks.map((task, i) => 
-                                        <li value={i}>
-                                            {task} <button value={i} onClick={this.taskDone}>✔</button>
+                                        <li key={i} value={i}>
+                                            {this.state.editingIndex === i ? (
+                                                <span>
+                                                    <input value={this.state.editingInput} onChange={this.handleEdit} />
+                                                    <button onClick={this.reSubmitTask}>Resubmit</button>
+                                                </span>
+                                            ) : (
+                                                <span>
+                                                    {task} <button value={i} onClick={this.taskDone}>✔</button>  <button value={i} onClick={() => this.startEditing(i)}>Edit</button>
+                                                </span>
+                                            )}
                                         </li>
                                 )}
                             </ul>
@@ -68,6 +80,31 @@
                         tasks.splice(index, 1);
                         return {
                             tasks: tasks
+                        };
+                    });
+                }
+
+                startEditing = (index) => {
+                    this.setState({
+                        editingIndex: index,
+                        editingInput: this.state.tasks[index]
+                    })
+                }
+
+                handleEdit = (event) => {
+                    this.setState({
+                        editingInput: event.target.value
+                    });
+                }
+
+                reSubmitTask = () => {
+                    this.setState((state) => {
+                        const newTasks = [...state.tasks];
+                        newTasks[state.editingIndex] = state.editingInput;
+                        return {
+                            tasks: newTasks,
+                            editingIndex: null,
+                            editingInput: ""
                         };
                     });
                 }
